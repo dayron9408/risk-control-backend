@@ -379,7 +379,7 @@ curl -X GET http://localhost:8000/api/v1/accounts \
 php artisan config:clear
 ```
 
-## 🔄 Evaluación de reglas
+##  Evaluación de reglas
 
 ### Mecanismos de evaluación
 
@@ -398,15 +398,15 @@ El sistema evita crear incidentes duplicados:
 
 ### Características implementadas
 
--   ✅ API REST completa con documentación Swagger
--   ✅ 3 tipos de reglas de riesgo configurables
--   ✅ 4 tipos de acciones automatizadas
--   ✅ Evaluación por evento y periódica
--   ✅ Prevención de incidentes duplicados
--   ✅ Sistema de logging y notificaciones
--   ✅ Datos de prueba completos
--   ✅ Middleware de autenticación API Key
--   ✅ Comandos Artisan para gestión
+-    API REST completa con documentación Swagger
+-    3 tipos de reglas de riesgo configurables
+-    4 tipos de acciones automatizadas
+-    Evaluación por evento y periódica
+-    Prevención de incidentes duplicados
+-    Sistema de logging y notificaciones
+-    Datos de prueba completos
+-    Middleware de autenticación API Key
+-    Comandos Artisan para gestión
 
 ### Consideraciones de diseño
 
