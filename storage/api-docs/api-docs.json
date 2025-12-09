@@ -1,0 +1,2935 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Risk Control API",
+        "description": "API para sistema de control de riesgo en operaciones de trading",
+        "contact": {
+            "email": "soporte@riskcontrol.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/accounts": {
+            "get": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Listar cuentas",
+                "description": "Obtener lista de cuentas",
+                "operationId": "96daed062b209799ebd8c7e84dc97aed",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filtrar por estado de cuenta",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "enable",
+                                "disable"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "trading_status",
+                        "in": "query",
+                        "description": "Filtrar por estado de trading",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "enable",
+                                "disable"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Elementos por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de cuentas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Account"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Crear cuenta",
+                "description": "Crear nueva cuenta",
+                "operationId": "b3234b57f04a5c23b5d70ac83678df8c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "login",
+                                    "trading_status",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "login": {
+                                        "type": "integer",
+                                        "example": 21002025
+                                    },
+                                    "trading_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "enable",
+                                            "disable"
+                                        ],
+                                        "example": "enable"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "enable",
+                                            "disable"
+                                        ],
+                                        "example": "enable"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cuenta creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Account created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/accounts/{id}": {
+            "get": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Obtener cuenta por ID",
+                "description": "Obtener cuenta por ID",
+                "operationId": "263a1e8964630a13950ec2af14d9d9c5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cuenta obtenida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Actualizar cuenta",
+                "description": "Actualizar cuenta",
+                "operationId": "f0a94d0d1e9d6f4d58fcd33b60baf45a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "login": {
+                                        "type": "integer",
+                                        "example": 21002025
+                                    },
+                                    "trading_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "enable",
+                                            "disable"
+                                        ]
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "enable",
+                                            "disable"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cuenta actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Account updated successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Eliminar cuenta",
+                "description": "Eliminar cuenta",
+                "operationId": "ef1e151477fc1ebb2938b30e27606342",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cuenta eliminada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Account deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/accounts/{id}/risk-status": {
+            "get": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Obtener estado de riesgo",
+                "description": "Obtener estado de riesgo de cuenta",
+                "operationId": "e71799dd59074f7573b4f46f0b713b4b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Estado de riesgo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "account_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "login": {
+                                            "type": "integer",
+                                            "example": 21002025
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "enable"
+                                        },
+                                        "trading_status": {
+                                            "type": "string",
+                                            "example": "enable"
+                                        },
+                                        "incidents_by_severity": {
+                                            "properties": {
+                                                "HARD": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "SOFT": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "open_trades_count": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "closed_trades_count": {
+                                            "type": "integer",
+                                            "example": 15
+                                        },
+                                        "risk_level": {
+                                            "type": "string",
+                                            "enum": [
+                                                "LOW",
+                                                "MEDIUM",
+                                                "HIGH",
+                                                "CRITICAL"
+                                            ],
+                                            "example": "HIGH"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/accounts/{id}/disable-trading": {
+            "post": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Deshabilitar trading",
+                "description": "Deshabilitar trading de cuenta",
+                "operationId": "2dde123440d7264e61add46b9d7c48e7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trading deshabilitado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trading disabled for account"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/accounts/{id}/enable-trading": {
+            "post": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Habilitar trading",
+                "description": "Habilitar trading de cuenta",
+                "operationId": "89d91530ea4bff09a76e4e6756985a93",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trading habilitado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trading enabled for account"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/accounts/{id}/trades": {
+            "get": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Obtener trades por cuenta",
+                "description": "Obtener trades de cuenta",
+                "operationId": "9466904fa2c9a709e1a2fe4e147c0746",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filtrar por estado de trade",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "open",
+                                "closed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filtrar por tipo de trade",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "BUY",
+                                "SELL"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "Fecha desde (formato YYYY-MM-DD)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "Fecha hasta (formato YYYY-MM-DD)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Elementos por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de trades",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Trade"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/incidents": {
+            "get": {
+                "tags": [
+                    "Incidents"
+                ],
+                "summary": "Listar incidentes",
+                "description": "Obtener lista de incidentes",
+                "operationId": "c58b1625d41eb05fa2809fa6eb326e25",
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "query",
+                        "description": "Filtrar por ID de cuenta",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "rule_id",
+                        "in": "query",
+                        "description": "Filtrar por ID de regla",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "severity",
+                        "in": "query",
+                        "description": "Filtrar por severidad",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "HARD",
+                                "SOFT"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Buscar por login de cuenta",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Elementos por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número de página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de incidentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Incident"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "from": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "to": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/accounts/{account_id}/incidents": {
+            "get": {
+                "tags": [
+                    "Incidents"
+                ],
+                "summary": "Obtener incidentes por cuenta",
+                "description": "Obtener incidentes por cuenta",
+                "operationId": "73b6a02dbe5326a187e4639b23e973dd",
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Elementos por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Incidentes de la cuenta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "account": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "login": {
+                                                    "type": "integer",
+                                                    "example": 21002025
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "incidents": {
+                                            "type": "object",
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/PaginatedResponse"
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/components/schemas/Incident"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/rules/{rule_id}/incidents": {
+            "get": {
+                "tags": [
+                    "Incidents"
+                ],
+                "summary": "Obtener incidentes por regla",
+                "description": "Obtener incidentes por regla",
+                "operationId": "69b57f05ad2fac68cd987d5755dcd3b6",
+                "parameters": [
+                    {
+                        "name": "rule_id",
+                        "in": "path",
+                        "description": "ID de la regla",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Elementos por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Incidentes de la regla",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "rule": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Duración mínima"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "DURATION"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "incidents": {
+                                            "type": "object",
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/PaginatedResponse"
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "$ref": "#/components/schemas/Incident"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/incidents/statistics": {
+            "get": {
+                "tags": [
+                    "Incidents"
+                ],
+                "summary": "Estadísticas de incidentes",
+                "description": "Obtener estadísticas de incidentes",
+                "operationId": "7c67e491508aedf7dab3f9d5736455b4",
+                "parameters": [
+                    {
+                        "name": "time_range",
+                        "in": "query",
+                        "description": "Rango de tiempo",
+                        "schema": {
+                            "type": "string",
+                            "default": "today",
+                            "enum": [
+                                "today",
+                                "week",
+                                "month",
+                                "year"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Estadísticas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "time_range": {
+                                            "type": "string",
+                                            "example": "today"
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 25
+                                        },
+                                        "by_severity": {
+                                            "properties": {
+                                                "HARD": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "SOFT": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "top_rules": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Duración mínima"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "DURATION"
+                                                    },
+                                                    "count": {
+                                                        "type": "integer",
+                                                        "example": 8
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/evaluate/account/{account_id}": {
+            "post": {
+                "tags": [
+                    "Evaluation"
+                ],
+                "summary": "Evaluar reglas para cuenta",
+                "description": "Evaluar reglas para una cuenta",
+                "operationId": "b959afca5f6eeb40b15debbdcc215e32",
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "path",
+                        "description": "ID de la cuenta",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "trigger": {
+                                        "type": "string",
+                                        "enum": [
+                                            "manual",
+                                            "event",
+                                            "periodic"
+                                        ],
+                                        "example": "manual"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Evaluación completada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Evaluation completed"
+                                        },
+                                        "account_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "login": {
+                                            "type": "integer",
+                                            "example": 21002025
+                                        },
+                                        "total_rules_evaluated": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "violations_found": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "rule_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "rule_name": {
+                                                        "type": "string",
+                                                        "example": "Duración mínima"
+                                                    },
+                                                    "violated": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Trade cerrado en menos de 60 segundos"
+                                                    },
+                                                    "actions_executed": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "trigger": {
+                                            "type": "string",
+                                            "example": "manual"
+                                        },
+                                        "evaluated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/evaluate/all-active": {
+            "post": {
+                "tags": [
+                    "Evaluation"
+                ],
+                "summary": "Evaluar todas las cuentas activas",
+                "description": "Evaluar todas las cuentas activas",
+                "operationId": "4e3e0a1822fd4b2d16fca36193aa849f",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "trigger": {
+                                        "type": "string",
+                                        "enum": [
+                                            "manual",
+                                            "periodic"
+                                        ],
+                                        "example": "manual"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Evaluación masiva completada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bulk evaluation completed"
+                                        },
+                                        "total_accounts_evaluated": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "total_violations_found": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "account_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "login": {
+                                                        "type": "integer",
+                                                        "example": 21002025
+                                                    },
+                                                    "rule_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "violated": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "trigger": {
+                                            "type": "string",
+                                            "example": "manual"
+                                        },
+                                        "evaluated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/rules": {
+            "get": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Listar reglas de riesgo",
+                "description": "Obtener lista de reglas",
+                "operationId": "0e384fb0a0e8e5db0cb98a08f17d8324",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filtrar por tipo de regla",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "DURATION",
+                                "VOLUME",
+                                "OPEN_TRADES"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "severity",
+                        "in": "query",
+                        "description": "Filtrar por severidad",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "HARD",
+                                "SOFT"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "Filtrar por estado activo",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Elementos por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de reglas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/RiskRule"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Crear regla de riesgo",
+                "description": "Crear nueva regla",
+                "operationId": "0a0eb4bd62f30e69031f7967335e3beb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RiskRule"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Regla creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Risk rule created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/RiskRule"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/rules/{id}": {
+            "get": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Obtener regla por ID",
+                "description": "Obtener regla por ID",
+                "operationId": "71e63db26877f9797c047361a8a43f07",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la regla",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Regla obtenida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RiskRule"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Actualizar regla",
+                "description": "Actualizar regla",
+                "operationId": "e08413db4c90fd204e4588df0ae9bd1f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la regla",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RiskRule"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Regla actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Risk rule updated successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/RiskRule"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Eliminar regla",
+                "description": "Eliminar regla",
+                "operationId": "e9b42d2dada869694bfe7fd64f75892a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la regla",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Regla eliminada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Risk rule deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/rules/{id}/toggle-active": {
+            "post": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Alternar estado activo",
+                "description": "Alternar estado activo de regla",
+                "operationId": "1d55eae0ff347a6d2bbac288cd92feda",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la regla",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Estado actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Risk rule status updated"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "is_active": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/rules/{id}/actions": {
+            "post": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Asignar acciones a regla",
+                "description": "Asignar acciones a regla",
+                "operationId": "ca8f2b29a46f33e71f6d62e85cdb2aa6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la regla",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "actions"
+                                ],
+                                "properties": {
+                                    "actions": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "action_type"
+                                            ],
+                                            "properties": {
+                                                "action_type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "EMAIL",
+                                                        "SLACK",
+                                                        "DISABLE_ACCOUNT",
+                                                        "DISABLE_TRADING"
+                                                    ],
+                                                    "example": "EMAIL"
+                                                },
+                                                "order": {
+                                                    "type": "integer",
+                                                    "example": 1,
+                                                    "nullable": true
+                                                },
+                                                "config": {
+                                                    "type": "object",
+                                                    "example": {
+                                                        "email_to": "admin@example.com"
+                                                    },
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Acciones asignadas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Actions assigned successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/RiskRule"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/rules/types/info": {
+            "get": {
+                "tags": [
+                    "RiskRules"
+                ],
+                "summary": "Obtener información de tipos de reglas",
+                "description": "Obtener información de tipos de reglas",
+                "operationId": "cf7636a77a370a7e2cdff8a1e1710c19",
+                "responses": {
+                    "200": {
+                        "description": "Información de tipos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "types": {
+                                            "type": "object",
+                                            "example": {
+                                                "DURATION": "Duración de Trade",
+                                                "VOLUME": "Consistencia de Volumen",
+                                                "OPEN_TRADES": "Trades Abiertos"
+                                            }
+                                        },
+                                        "types_info": {
+                                            "description": "Información detallada por tipo",
+                                            "type": "object"
+                                        },
+                                        "severities": {
+                                            "type": "object",
+                                            "example": {
+                                                "HARD": "Regla Dura",
+                                                "SOFT": "Regla Suave"
+                                            }
+                                        },
+                                        "action_types": {
+                                            "description": "Tipos de acciones disponibles",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "EMAIL"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/actions/types": {
+            "get": {
+                "tags": [
+                    "RuleActions"
+                ],
+                "summary": "Obtener tipos de acciones",
+                "description": "Obtener tipos de acciones disponibles",
+                "operationId": "bf29249c8a1ae7a593dae01df2cd1092",
+                "responses": {
+                    "200": {
+                        "description": "Tipos de acciones",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "action_types": {
+                                            "type": "object",
+                                            "example": {
+                                                "EMAIL": "Notificar por Email",
+                                                "SLACK": "Notificar por Slack",
+                                                "DISABLE_ACCOUNT": "Deshabilitar Cuenta",
+                                                "DISABLE_TRADING": "Deshabilitar Trading"
+                                            }
+                                        },
+                                        "descriptions": {
+                                            "type": "object",
+                                            "example": {
+                                                "EMAIL": "Enviar notificación por email (mock)",
+                                                "SLACK": "Enviar notificación por Slack (mock)",
+                                                "DISABLE_ACCOUNT": "Deshabilitar completamente la cuenta",
+                                                "DISABLE_TRADING": "Deshabilitar solo el trading de la cuenta"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/trades": {
+            "get": {
+                "tags": [
+                    "Trades"
+                ],
+                "summary": "Listar trades",
+                "description": "Obtener lista de trades",
+                "operationId": "221ce7b87337731c6bd725bccc861beb",
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "query",
+                        "description": "Filtrar por ID de cuenta",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filtrar por estado",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "open",
+                                "closed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filtrar por tipo",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "BUY",
+                                "SELL"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Elementos por página",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de trades",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/PaginatedResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Trade"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Trades"
+                ],
+                "summary": "Crear trade",
+                "description": "Crear nuevo trade",
+                "operationId": "21ec71c9e8993e494f7407bc39f6242a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "account_id",
+                                    "type",
+                                    "volume",
+                                    "open_time",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "account_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "BUY",
+                                            "SELL"
+                                        ],
+                                        "example": "BUY"
+                                    },
+                                    "volume": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1.5
+                                    },
+                                    "open_time": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "close_time": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "nullable": true
+                                    },
+                                    "open_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1.23456
+                                    },
+                                    "close_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "closed"
+                                        ],
+                                        "example": "open"
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Trade creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trade created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Trade"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/trades/{id}": {
+            "get": {
+                "tags": [
+                    "Trades"
+                ],
+                "summary": "Obtener trade por ID",
+                "description": "Obtener trade por ID",
+                "operationId": "3d23d4e4bffa20617f52388f926f61e0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del trade",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trade obtenido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Trade"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Trades"
+                ],
+                "summary": "Actualizar trade",
+                "description": "Actualizar trade",
+                "operationId": "68e92b82c6509bd9417ca390bffd57c9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del trade",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "close_time": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "nullable": true
+                                    },
+                                    "close_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1.24567,
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "closed"
+                                        ],
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Trade actualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trade updated successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Trade"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Trades"
+                ],
+                "summary": "Eliminar trade",
+                "description": "Eliminar trade",
+                "operationId": "e00f7f1608545a53cafdef9084b6d4de",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del trade",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trade eliminado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trade deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        },
+        "/trades/{id}/close": {
+            "post": {
+                "tags": [
+                    "Trades"
+                ],
+                "summary": "Cerrar trade",
+                "description": "Cerrar trade",
+                "operationId": "8e902cda648c58bd2b31dd4d9b886f06",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del trade",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "close_price"
+                                ],
+                                "properties": {
+                                    "close_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1.24567
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Trade cerrado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trade closed successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Trade"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    }
+                },
+                "security": [
+                    {
+                        "apiKey": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PaginatedResponse": {
+                "title": "Respuesta Paginada",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "links": {
+                        "type": "object"
+                    },
+                    "meta": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorResponse": {
+                "title": "Respuesta de Error",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "example": "Unauthorized"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Clave API inválida o faltante"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationErrorResponse": {
+                "title": "Respuesta de Error de Validación",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Los datos proporcionados son inválidos."
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "email": [
+                                "El campo email es obligatorio."
+                            ],
+                            "password": [
+                                "El campo password debe tener al menos 6 caracteres."
+                            ]
+                        },
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "SuccessResponse": {
+                "title": "Respuesta Exitosa",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Operación completada exitosamente"
+                    },
+                    "data": {
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Account": {
+                "title": "Cuenta de Trading",
+                "description": "Representa una cuenta de trading en el sistema",
+                "required": [
+                    "login",
+                    "trading_status",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador único",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "login": {
+                        "description": "Identificador numérico de login para la cuenta de trading",
+                        "type": "integer",
+                        "example": 21002025
+                    },
+                    "trading_status": {
+                        "description": "Estado de actividad de trading",
+                        "type": "string",
+                        "enum": [
+                            "enable",
+                            "disable"
+                        ],
+                        "example": "enable"
+                    },
+                    "status": {
+                        "description": "Estado general de la cuenta",
+                        "type": "string",
+                        "enum": [
+                            "enable",
+                            "disable"
+                        ],
+                        "example": "enable"
+                    },
+                    "created_at": {
+                        "description": "Fecha y hora de creación de la cuenta",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Fecha y hora de última actualización",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "description": "Fecha y hora de eliminación suave (si aplica)",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Incident": {
+                "title": "Incidencia",
+                "description": "Registro de violación de una regla de riesgo",
+                "required": [
+                    "rule_id",
+                    "account_id",
+                    "severity"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador único",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "rule_id": {
+                        "description": "ID de la regla violada",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "account_id": {
+                        "description": "ID de la cuenta involucrada",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "trade_id": {
+                        "description": "ID del trade relacionado (si aplica)",
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "severity": {
+                        "description": "Severidad del incidente",
+                        "type": "string",
+                        "enum": [
+                            "HARD",
+                            "SOFT"
+                        ],
+                        "example": "HARD"
+                    },
+                    "description": {
+                        "description": "Descripción del incidente",
+                        "type": "string",
+                        "example": "Trade cerrado en menos de 60 segundos"
+                    },
+                    "created_at": {
+                        "description": "Fecha y hora de creación del incidente",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Notification": {
+                "title": "Notificación",
+                "description": "Registro de ejecución de acciones de notificación",
+                "required": [
+                    "incident_id",
+                    "action_type",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador único",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "incident_id": {
+                        "description": "ID del incidente relacionado",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "action_type": {
+                        "description": "Tipo de acción ejecutada",
+                        "type": "string",
+                        "enum": [
+                            "EMAIL",
+                            "SLACK",
+                            "DISABLE_ACCOUNT",
+                            "DISABLE_TRADING"
+                        ],
+                        "example": "EMAIL"
+                    },
+                    "status": {
+                        "description": "Estado de la ejecución",
+                        "type": "string",
+                        "enum": [
+                            "PENDING",
+                            "EXECUTED",
+                            "FAILED"
+                        ],
+                        "example": "EXECUTED"
+                    },
+                    "details": {
+                        "description": "Detalles de la ejecución",
+                        "type": "string",
+                        "example": "Email enviado exitosamente a admin@example.com",
+                        "nullable": true
+                    },
+                    "metadata": {
+                        "description": "Metadatos adicionales",
+                        "type": "object",
+                        "nullable": true,
+                        "additionalProperties": true
+                    },
+                    "executed_at": {
+                        "description": "Fecha y hora de ejecución",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "RiskRule": {
+                "title": "Regla de Riesgo",
+                "description": "Regla configurable para el control de riesgo",
+                "required": [
+                    "name",
+                    "type",
+                    "severity",
+                    "is_active"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador único",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Nombre de la regla",
+                        "type": "string",
+                        "example": "Duración mínima de trade"
+                    },
+                    "description": {
+                        "description": "Descripción de la regla",
+                        "type": "string",
+                        "example": "Regla que verifica si un trade dura menos del tiempo mínimo configurado",
+                        "nullable": true
+                    },
+                    "type": {
+                        "description": "Tipo de regla",
+                        "type": "string",
+                        "enum": [
+                            "DURATION",
+                            "VOLUME",
+                            "OPEN_TRADES"
+                        ],
+                        "example": "DURATION"
+                    },
+                    "severity": {
+                        "description": "Severidad de la regla",
+                        "type": "string",
+                        "enum": [
+                            "HARD",
+                            "SOFT"
+                        ],
+                        "example": "HARD"
+                    },
+                    "min_duration_seconds": {
+                        "description": "Duración mínima en segundos (para reglas tipo DURATION)",
+                        "type": "integer",
+                        "example": 60,
+                        "nullable": true
+                    },
+                    "min_factor": {
+                        "description": "Factor mínimo para volumen (para reglas tipo VOLUME)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 0.5,
+                        "nullable": true
+                    },
+                    "max_factor": {
+                        "description": "Factor máximo para volumen (para reglas tipo VOLUME)",
+                        "type": "number",
+                        "format": "float",
+                        "example": 2,
+                        "nullable": true
+                    },
+                    "lookback_trades": {
+                        "description": "Cantidad de trades históricos a considerar (para reglas tipo VOLUME)",
+                        "type": "integer",
+                        "example": 10,
+                        "nullable": true
+                    },
+                    "time_window_minutes": {
+                        "description": "Ventana de tiempo en minutos (para reglas tipo OPEN_TRADES)",
+                        "type": "integer",
+                        "example": 60,
+                        "nullable": true
+                    },
+                    "min_open_trades": {
+                        "description": "Mínimo de trades abiertos permitidos",
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "max_open_trades": {
+                        "description": "Máximo de trades abiertos permitidos",
+                        "type": "integer",
+                        "example": 5,
+                        "nullable": true
+                    },
+                    "incidents_before_action": {
+                        "description": "Incidentes necesarios antes de ejecutar acción (para reglas SOFT)",
+                        "type": "integer",
+                        "example": 3,
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Indica si la regla está activa",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "RuleAction": {
+                "title": "Acción de Regla",
+                "description": "Acción a ejecutar cuando se viola una regla",
+                "required": [
+                    "rule_id",
+                    "action_type"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador único",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "rule_id": {
+                        "description": "ID de la regla asociada",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "action_type": {
+                        "description": "Tipo de acción a ejecutar",
+                        "type": "string",
+                        "enum": [
+                            "EMAIL",
+                            "SLACK",
+                            "DISABLE_ACCOUNT",
+                            "DISABLE_TRADING"
+                        ],
+                        "example": "EMAIL"
+                    },
+                    "config": {
+                        "description": "Configuración específica de la acción",
+                        "type": "object",
+                        "example": {
+                            "email_to": "admin@example.com",
+                            "subject": "Alerta de riesgo"
+                        },
+                        "nullable": true,
+                        "additionalProperties": true
+                    },
+                    "order": {
+                        "description": "Orden de ejecución de la acción",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Trade": {
+                "title": "Operación de Trading",
+                "description": "Representa una operación de trading realizada por un usuario",
+                "required": [
+                    "account_id",
+                    "type",
+                    "volume",
+                    "open_time",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Identificador único",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "account_id": {
+                        "description": "ID de la cuenta asociada",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "type": {
+                        "description": "Tipo de operación",
+                        "type": "string",
+                        "enum": [
+                            "BUY",
+                            "SELL"
+                        ],
+                        "example": "BUY"
+                    },
+                    "volume": {
+                        "description": "Volumen de la operación",
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.5
+                    },
+                    "open_time": {
+                        "description": "Fecha y hora de apertura de la operación",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "close_time": {
+                        "description": "Fecha y hora de cierre de la operación",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "open_price": {
+                        "description": "Precio de apertura",
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.23456
+                    },
+                    "close_price": {
+                        "description": "Precio de cierre",
+                        "type": "number",
+                        "format": "float",
+                        "example": 1.24567,
+                        "nullable": true
+                    },
+                    "status": {
+                        "description": "Estado de la operación",
+                        "type": "string",
+                        "enum": [
+                            "open",
+                            "closed"
+                        ],
+                        "example": "open"
+                    },
+                    "metadata": {
+                        "description": "Metadatos adicionales de la operación",
+                        "type": "object",
+                        "nullable": true,
+                        "additionalProperties": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "ValidationError": {
+                "description": "Error de validación",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Los datos proporcionados son inválidos."
+                                },
+                                "errors": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "Unauthorized": {
+                "description": "No autorizado",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Unauthorized"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Clave API inválida"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "NotFound": {
+                "description": "Recurso no encontrado",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "example": "Not Found"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Recurso no encontrado"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "apiKey": {
+                "type": "apiKey",
+                "name": "X-API-KEY",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Accounts",
+            "description": "Gestión de cuentas de trading"
+        },
+        {
+            "name": "Incidents",
+            "description": "Gestión de incidentes de riesgo"
+        },
+        {
+            "name": "Evaluation",
+            "description": "Evaluación de reglas de riesgo"
+        },
+        {
+            "name": "RiskRules",
+            "description": "Gestión de reglas de riesgo"
+        },
+        {
+            "name": "RuleActions",
+            "description": "Tipos de acciones para reglas"
+        },
+        {
+            "name": "Trades",
+            "description": "Gestión de operaciones de trading"
+        }
+    ]
+}
